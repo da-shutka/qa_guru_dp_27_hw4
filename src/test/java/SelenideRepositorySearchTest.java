@@ -20,6 +20,17 @@ public class SelenideRepositorySearchTest {
         $("#wiki-tab").click();
         $$("#wiki-body ul li").shouldHave(itemWithText("Soft assertions"));
         $$("#wiki-body ul li a").findBy(text("Soft Assertions")).click();
-        $$(".markdown-heading .heading-element").filterBy(text("JUnit5")).shouldHave(size(1));
+        $$(".markdown-heading").findBy(text("JUnit5")).sibling(0).shouldHave(text("""
+            @ExtendWith({SoftAssertsExtension.class})
+            class Tests {
+                @Test
+                void test() {
+                    Configuration.assertionMode = SOFT;
+                    open("page.html");
+
+                    $("#first").should(visible).click();
+                    $("#second").should(visible).click();
+                }
+            }"""));
     }
 }
